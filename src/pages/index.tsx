@@ -1,8 +1,10 @@
 import Head from "next/head";
 import Link from "next/link";
-import { SignInButton, useUser, SignOutButton } from "@clerk/nextjs";
+import { SignInButton, useUser, SignOutButton  } from "@clerk/nextjs";
+
 
 import { api } from "~/utils/api";
+import { NavBar } from "~/components/NavBar";
 
 export default function Home() {
   const hello = api.post.hello.useQuery({ text: "from tRPC" });
