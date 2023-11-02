@@ -1,22 +1,31 @@
 import Head from "next/head";
-//import Link from "next/link";
-import {  useUser } from "@clerk/nextjs";
+import { type NextPage } from "next";
 import { useForm } from "react-hook-form";
-
-
 import { api } from "~/utils/api";
-import { NavBar } from "~/components/NavBar";
+import { useRouter } from "next/router";
+
 
 type SellItemForm = {
-    name: String;
+    name: string;
     description: string;
-    price: number;
-}
+    price: string;
+};
 
-export default function SellAnItem() {
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<SellItemForm>();
-    const onSubmit = (formData: SellItemForm) => console.log(formData);
-  const user = useUser();
+const SellAnItem: NextPage = () => {
+  const createListing = api.listings.create.useMutation();
+  const router = useRouter();
+
+  const { register, handleSubmit } = useForm<SellItemForm>();
+  const onSubmit = (formData: SellItemForm) => {
+    createListing
+      .mutateAsync({
+        ...formData,
+        price: parseFloat(formData.price),
+      })
+      .then(() => {
+        router.push("/");
+      });
+  };
 
 
   return (
@@ -85,4 +94,5 @@ export default function SellAnItem() {
       </main>
     </>
   );
-}
+};
+export default SellAnItem;
